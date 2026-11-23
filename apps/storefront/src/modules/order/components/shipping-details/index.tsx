@@ -64,9 +64,9 @@ const ShippingDetails = ({ order, locale }: ShippingDetailsProps) => {
             {t("checkout.method")}
           </Text>
           <Text className="txt-medium text-ui-fg-subtle">
-            {(order as any).shipping_methods[0]?.name} (
+            {(order.shipping_methods?.[0] as { name?: string })?.name} (
             {convertToLocale({
-              amount: order.shipping_methods?.[0].total ?? 0,
+              amount: order.shipping_methods?.[0]?.total ?? 0,
               currency_code: order.currency_code,
             })}
             )
