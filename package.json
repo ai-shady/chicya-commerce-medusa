@@ -24,7 +24,7 @@
     }
   },
   "devDependencies": {
-    "@medusajs/eslint-plugin": "2.19.0",
+    "@medusajs/eslint-plugin": "2.23.0",
     "eslint": "^9.39.4",
     "jiti": "^2.7.0",
     "prettier": "^3.2.5",
@@ -42,17 +42,17 @@
     "@eslint/eslintrc": {
       "ajv": "^6.12.4"
     },
-    "react": "19.0.5",
-    "react-dom": "19.0.5"
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1"
   },
   "allowScripts": {
-    "@medusajs/telemetry@2.19.0": true,
     "@swc/core@1.16.1": true,
     "esbuild@0.28.2": true,
     "fsevents@2.3.3": true,
     "msgpackr-extract@3.0.4": true,
     "protobufjs@7.6.6": true,
     "unrs-resolver@1.12.2": true,
-    "sharp@0.34.5": true
+    "sharp@0.34.5": true,
+    "@medusajs/telemetry@2.23.0": true
   }
 }
