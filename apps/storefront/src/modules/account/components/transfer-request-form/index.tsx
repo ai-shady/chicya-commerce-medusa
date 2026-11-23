@@ -67,12 +67,12 @@ export default function TransferRequestForm() {
             <div className="flex flex-col gap-y-1">
               <Text className="text-medim-pl text-neutral-950">
                 {t("account.transferRequested", {
-                  orderId: state.order?.id,
+                  orderId: state.order?.id ?? "",
                 })}
               </Text>
               <Text className="text-base-regular text-neutral-600">
                 {t("account.transferEmailSent", {
-                  email: state.order?.email,
+                  email: state.order?.email ?? "",
                 })}
               </Text>
             </div>

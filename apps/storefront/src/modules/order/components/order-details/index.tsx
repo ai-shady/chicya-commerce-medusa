@@ -24,7 +24,7 @@ const OrderDetails = ({ order, showStatus, locale }: OrderDetailsProps) => {
           className="text-ui-fg-medium-plus font-semibold"
           data-testid="order-email"
         >
-          {t("order.confirmationSent", { email: order.email })}
+          {t("order.confirmationSent", { email: order.email ?? "" })}
         </span>
       </Text>
       <Text className="mt-2">

@@ -24,7 +24,7 @@ const CartDropdown = ({
   cart?: HttpTypes.StoreCart | null
 }) => {
   const { t } = useT()
-  const [activeTimer, setActiveTimer] = useState<NodeJS.Timer | undefined>(
+  const [activeTimer, setActiveTimer] = useState<ReturnType<typeof setTimeout> | undefined>(
     undefined
   )
   const [cartDropdownOpen, setCartDropdownOpen] = useState(false)

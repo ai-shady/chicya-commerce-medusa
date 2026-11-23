@@ -23,7 +23,7 @@ const LineItemOptions = ({
       data-value={dataValue}
       className="inline-block txt-medium text-ui-fg-subtle w-full overflow-hidden text-ellipsis"
     >
-      {t("common.lineItemVariant", { title: variant?.title })}
+      {t("common.lineItemVariant", { title: variant?.title ?? "" })}
     </Text>
   )
 }

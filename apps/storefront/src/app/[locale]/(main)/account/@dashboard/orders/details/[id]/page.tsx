@@ -18,7 +18,9 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
   }
 
   return {
-    title: t("metadata.orderDetailTitle", { displayId: order.display_id }),
+    title: t("metadata.orderDetailTitle", {
+      displayId: order.display_id ?? "",
+    }),
     description: t("metadata.orderDetailDesc"),
   }
 }
@@ -31,5 +33,5 @@ export default async function OrderDetailPage(props: Props) {
     notFound()
   }
 
-  return <OrderDetailsTemplate order={order} />
+  return <OrderDetailsTemplate order={order} locale={params.locale} />
 }

@@ -13,10 +13,12 @@ import React from "react"
 
 type OrderDetailsTemplateProps = {
   order: HttpTypes.StoreOrder
+  locale: string
 }
 
 const OrderDetailsTemplate: React.FC<OrderDetailsTemplateProps> = ({
   order,
+  locale,
 }) => {
   const { t } = useT()
 
@@ -36,11 +38,11 @@ const OrderDetailsTemplate: React.FC<OrderDetailsTemplateProps> = ({
         className="flex flex-col gap-4 h-full bg-white w-full"
         data-testid="order-details-container"
       >
-        <OrderDetails order={order} showStatus />
+        <OrderDetails order={order} showStatus locale={locale} />
         <Items order={order} />
-        <ShippingDetails order={order} />
-        <OrderSummary order={order} />
-        <Help />
+        <ShippingDetails order={order} locale={locale} />
+        <OrderSummary order={order} locale={locale} />
+        <Help locale={locale} />
       </div>
     </div>
   )

@@ -123,7 +123,7 @@ const Overview = ({ customer, orders, locale }: OverviewProps) => {
                             >
                               <span className="sr-only">
                                 {t("account.goToOrder", {
-                                  displayId: order.display_id,
+                                  displayId: order.display_id ?? "",
                                 })}
                               </span>
                               <ChevronDown className="-rotate-90" />

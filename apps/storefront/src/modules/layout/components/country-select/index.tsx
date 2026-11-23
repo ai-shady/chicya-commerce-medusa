@@ -33,10 +33,7 @@ type CountrySelectProps = {
 
 const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
   const { t } = useT()
-  const [current, setCurrent] = useState<
-    | { country: string | undefined; region: string; label: string | undefined }
-    | undefined
-  >(undefined)
+  const [current, setCurrent] = useState<CountryOption | undefined>(undefined)
 
   const params = useParams()
   const locale =
@@ -46,17 +43,17 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
 
   const { state } = toggleState
 
-  const options = useMemo(() => {
-    return regions
-      ?.map((r) => {
-        return r.countries?.map((c) => ({
-          country: c.iso_2,
-          region: r.id,
-          label: c.display_name,
+  const options = useMemo<CountryOption[]>(() => {
+    return (regions ?? [])
+      .flatMap((region) =>
+        (region.countries ?? []).map((country) => ({
+          country: country.iso_2 ?? "",
+          region: region.id,
+          label: country.display_name ?? country.iso_2 ?? "",
         }))
-      })
-      .flat()
-      .sort((a, b) => (a?.label ?? "").localeCompare(b?.label ?? ""))
+      )
+      .filter((option) => option.country)
+      .sort((a, b) => a.label.localeCompare(b.label))
   }, [regions])
 
   useEffect(() => {
@@ -77,11 +74,7 @@ const CountrySelect = ({ toggleState, regions }: CountrySelectProps) => {
       <Listbox
         as="span"
         onChange={handleChange}
-        defaultValue={
-          countryCode
-            ? options?.find((o) => o?.country === countryCode)
-            : undefined
-        }
+        defaultValue={current}
       >
         <ListboxButton className="py-1 w-full">
           <div className="txt-compact-small flex items-start gap-x-2">

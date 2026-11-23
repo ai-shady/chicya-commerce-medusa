@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 
 import LocalizedClientLink from "@modules/common/components/localized-client-link"
 import { getT } from "@i18n/get-t"
+import type { Dictionary } from "@i18n/config"
 
 type Props = {
   params: Promise<{ locale: string }>
@@ -20,7 +21,11 @@ export async function generateMetadata(props: Props): Promise<Metadata> {
 export default async function StoryPage(props: Props) {
   const params = await props.params
   const { t, dict } = await getT(params.locale)
-  const values = dict.home.story.values as { title: string; body: string }[]
+  const home = dict.home as Dictionary
+  const values = (home.story as Dictionary).values as {
+    title: string
+    body: string
+  }[]
 
   const storyJsonLd = {
     "@context": "https://schema.org",

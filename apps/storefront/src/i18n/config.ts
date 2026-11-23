@@ -1,5 +1,5 @@
 export type Dictionary = {
-  [key: string]: string | Dictionary | string[]
+  [key: string]: string | string[] | Dictionary | Dictionary[]
 }
 
 export type Language = {

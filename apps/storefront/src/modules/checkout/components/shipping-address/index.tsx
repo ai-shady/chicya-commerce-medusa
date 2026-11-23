@@ -101,7 +101,7 @@ const ShippingAddress = ({
       {customer && (addressesInRegion?.length || 0) > 0 && (
         <Container className="mb-6 flex flex-col gap-y-4 p-5">
           <p className="text-small-regular">
-            {t("checkout.hiName", { firstName: customer.first_name })}
+            {t("checkout.hiName", { firstName: customer.first_name ?? "" })}
           </p>
           <AddressSelect
             addresses={customer.addresses}

@@ -7,7 +7,9 @@ import { DEFAULT_LOCALE_CODE } from "./config"
 
 export type UseT = {
   t: (key: string, vars?: Record<string, string | number>) => string
-  dict: Dictionary
+  // See the note in `get-t.ts`: the dictionary tree is indexed dynamically,
+  // `Dictionary` still validates the written literals.
+  dict: any
   localeCode: string
   localePath: string
 }
