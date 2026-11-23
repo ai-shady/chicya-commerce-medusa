@@ -7,6 +7,7 @@ import LocalizedClientLink from "@modules/common/components/localized-client-lin
 import CartButton from "@modules/layout/components/cart-button"
 import SideMenu from "@modules/layout/components/side-menu"
 import CountrySwitcher from "@modules/layout/components/country-switcher"
+import Search from "@modules/layout/components/search"
 
 export default async function Nav({ locale }: { locale: string }) {
   const { t } = await getT(locale)
@@ -68,6 +69,7 @@ export default async function Nav({ locale }: { locale: string }) {
                 {t("nav.account")}
               </LocalizedClientLink>
             </div>
+            <Search />
             <Suspense
               fallback={
                 <LocalizedClientLink
