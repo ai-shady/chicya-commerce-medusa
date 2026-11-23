@@ -9,6 +9,16 @@ ENV_FILE="${COMPOSE_DIR}/.env"
 
 echo "=== deployment start: ${IMAGE} ==="
 
+# Refuse to run against the wrong account: the Mac's default AWS profile points
+# at the company account, and this project lives in the personal one.
+EXPECTED_ACCOUNT="039314424497"
+ACTUAL_ACCOUNT="$(aws sts get-caller-identity --query Account --output text 2>/dev/null || echo unknown)"
+if [ "${ACTUAL_ACCOUNT}" != "${EXPECTED_ACCOUNT}" ]; then
+  echo "ERROR: caller is account '${ACTUAL_ACCOUNT}', expected ${EXPECTED_ACCOUNT}"
+  echo "Run with AWS_PROFILE=chicya (see docs/aws-profiles.md)"
+  exit 1
+fi
+
 if [ ! -f "${COMPOSE_FILE}" ]; then
   echo "ERROR: compose file not found at ${COMPOSE_FILE}"
   exit 1
