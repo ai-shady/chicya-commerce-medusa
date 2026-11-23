@@ -145,6 +145,15 @@ claude mcp add --transport http medusa https://docs.medusajs.com/mcp # or agent 
 - Running the test task without a reachable PostgreSQL — integration suites need a live DB.
 - Silencing `@medusajs/*` ESLint rules instead of fixing the underlying pattern.
 
+## Remotes and upstream sync
+
+- `origin` is this repo (push here). `upstream` is `medusajs/dtc-starter` and is **read-only** — `pushurl` is set to `no_push`, so an accidental `git push upstream` fails instead of polluting the template.
+- Local history and `upstream/main` have **no common ancestor** (the template was imported as one squashed commit). Never `git merge` or `git rebase` against `upstream/main`, and never add `--allow-unrelated-histories`. Port upstream commits by hand instead.
+- To see what upstream has that we don't: `./scripts/upstream-gap.sh` (add `--stat` for file summaries). Read the diff with `git show <sha>`, port what applies, then bump `SYNCED` in the script and update the table in `docs/upstream-sync.md` in the same commit.
+- Upstream storefront diffs are intent, not patches: our storefront uses `[locale]` routing, its own UI kit and i18n. Re-implement the fix; don't copy files over ours.
+- Keep every `@medusajs/*` package at the same version in `apps/backend` and `apps/storefront`. Mixed versions make npm hoist two copies of `@medusajs/types` and break backend typecheck with "logger is missing in type SearchContainer"-style errors.
+- Ignore upstream's `pnpm-workspace.yaml` / pnpm lockfile changes; this repo is npm workspaces.
+
 ## Off-Limits
 
 - `apps/backend/.medusa/`, `.next/`, `dist/`, `out/`, `.turbo/` — build output, excluded from the workspace and regenerated.
