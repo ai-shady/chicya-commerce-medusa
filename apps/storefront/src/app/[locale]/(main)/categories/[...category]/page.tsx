@@ -1,11 +1,11 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 
-import { getCategoryByHandle, listCategories } from "@lib/data/categories"
+import { getCategoryByHandle } from "@lib/data/categories"
 import CategoryTemplate from "@modules/categories/templates"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import { getT } from "@i18n/get-t"
-import { locales, localeToCountryCode } from "@i18n/config"
+import { localeToCountryCode } from "@i18n/config"
 
 type Props = {
   params: Promise<{ category: string[]; locale: string }>
@@ -13,25 +13,6 @@ type Props = {
     sortBy?: SortOptions
     page?: string
   }>
-}
-
-export async function generateStaticParams() {
-  const product_categories = await listCategories()
-
-  if (!product_categories) {
-    return []
-  }
-
-  const categoryHandles = product_categories.map(
-    (category: any) => category.handle
-  )
-
-  return locales.flatMap((locale) =>
-    categoryHandles.flatMap((handle: any) => ({
-      locale: locale.code,
-      category: [handle],
-    }))
-  )
 }
 
 export async function generateMetadata(props: Props): Promise<Metadata> {

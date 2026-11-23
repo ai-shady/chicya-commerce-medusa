@@ -1,12 +1,11 @@
 import { Metadata } from "next"
 import { notFound } from "next/navigation"
 
-import { getCollectionByHandle, listCollections } from "@lib/data/collections"
-import { StoreCollection } from "@medusajs/types"
+import { getCollectionByHandle } from "@lib/data/collections"
 import CollectionTemplate from "@modules/collections/templates"
 import { SortOptions } from "@modules/store/components/refinement-list/sort-products"
 import { getT } from "@i18n/get-t"
-import { locales, localeToCountryCode } from "@i18n/config"
+import { localeToCountryCode } from "@i18n/config"
 
 type Props = {
   params: Promise<{ handle: string; locale: string }>
@@ -17,27 +16,6 @@ type Props = {
 }
 
 export const PRODUCT_LIMIT = 12
-
-export async function generateStaticParams() {
-  const { collections } = await listCollections({
-    fields: "*products",
-  })
-
-  if (!collections) {
-    return []
-  }
-
-  const collectionHandles = collections.map(
-    (collection: StoreCollection) => collection.handle
-  )
-
-  return locales.flatMap((locale) =>
-    collectionHandles.flatMap((handle: string | undefined) => ({
-      locale: locale.code,
-      handle,
-    }))
-  )
-}
 
 export async function generateMetadata(props: Props): Promise<Metadata> {
   const params = await props.params
