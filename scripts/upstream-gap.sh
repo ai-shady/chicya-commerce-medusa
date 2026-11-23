@@ -5,7 +5,7 @@
 set -euo pipefail
 
 # Last upstream commit we fully reviewed. Keep in sync with docs/upstream-sync.md
-SYNCED="f677db4"
+SYNCED="edd0c1c"
 
 cd "$(git rev-parse --show-toplevel)"
 
