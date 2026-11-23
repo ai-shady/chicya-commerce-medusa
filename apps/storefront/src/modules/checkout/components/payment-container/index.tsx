@@ -1,13 +1,13 @@
 import { Radio as RadioGroupOption } from "@headlessui/react"
 import { Text, clx } from "@medusajs/ui"
-import React, { useContext, useMemo, type JSX } from "react"
+import React, { useContext, type JSX } from "react"
 
 import Radio from "@modules/common/components/radio"
 
 import { isManual } from "@lib/constants"
 import SkeletonCardDetails from "@modules/skeletons/components/skeleton-card-details"
-import { CardElement } from "@stripe/react-stripe-js"
-import { StripeCardElementOptions } from "@stripe/stripe-js"
+import { PaymentElement } from "@stripe/react-stripe-js"
+import { useT } from "@i18n/use-t"
 import PaymentTest from "../payment-test"
 import { StripeContext } from "../payment-wrapper/stripe-wrapper"
 
@@ -65,37 +65,19 @@ const PaymentContainer: React.FC<PaymentContainerProps> = ({
 
 export default PaymentContainer
 
-export const StripeCardContainer = ({
+export const StripePaymentContainer = ({
   paymentProviderId,
   selectedPaymentOptionId,
   paymentInfoMap,
   disabled = false,
-  setCardBrand,
   setError,
-  setCardComplete,
+  setPaymentComplete,
 }: Omit<PaymentContainerProps, "children"> & {
-  setCardBrand: (brand: string) => void
   setError: (error: string | null) => void
-  setCardComplete: (complete: boolean) => void
+  setPaymentComplete: (complete: boolean) => void
 }) => {
   const stripeReady = useContext(StripeContext)
-
-  const useOptions: StripeCardElementOptions = useMemo(() => {
-    return {
-      style: {
-        base: {
-          fontFamily: "Inter, sans-serif",
-          color: "#424270",
-          "::placeholder": {
-            color: "rgb(107 114 128)",
-          },
-        },
-      },
-      classes: {
-        base: "pt-3 pb-1 block w-full h-11 px-4 mt-0 bg-ui-bg-field border rounded-md appearance-none focus:outline-none focus:ring-0 focus:shadow-borders-interactive-with-active border-ui-border-base hover:bg-ui-bg-field-hover transition-all duration-300 ease-in-out",
-      },
-    }
-  }, [])
+  const { t } = useT()
 
   return (
     <PaymentContainer
@@ -108,16 +90,23 @@ export const StripeCardContainer = ({
         (stripeReady ? (
           <div className="my-4 transition-all duration-150 ease-in-out">
             <Text className="txt-medium-plus text-ui-fg-base mb-1">
-              Enter your card details:
+              {t("checkout.enterPaymentDetailsColon")}
             </Text>
-            <CardElement
-              options={useOptions as StripeCardElementOptions}
+            <PaymentElement
+              options={{ layout: "accordion" }}
               onChange={(e) => {
-                setCardBrand(
-                  e.brand && e.brand.charAt(0).toUpperCase() + e.brand.slice(1)
+                setError(null)
+                setPaymentComplete(e.complete)
+              }}
+              // Without a handler Stripe.js reports a failed mount as an
+              // unhandled "payment Element loaderror" and the option renders
+              // blank with no explanation. Surface it in the checkout's own
+              // error slot instead.
+              onLoadError={(e) => {
+                setPaymentComplete(false)
+                setError(
+                  e.error?.message ?? t("checkout.paymentMethodsLoadError")
                 )
-                setError(e.error?.message || null)
-                setCardComplete(e.complete)
               }}
             />
           </div>
