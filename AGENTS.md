@@ -154,6 +154,12 @@ claude mcp add --transport http medusa https://docs.medusajs.com/mcp # or agent 
 - Keep every `@medusajs/*` package at the same version in `apps/backend` and `apps/storefront`. Mixed versions make npm hoist two copies of `@medusajs/types` and break backend typecheck with "logger is missing in type SearchContainer"-style errors.
 - Ignore upstream's `pnpm-workspace.yaml` / pnpm lockfile changes; this repo is npm workspaces.
 
+## Upstream contributions
+
+- Medusa plans upstream work discussion-first: features start in GitHub Discussions, and a PR is only accepted once a maintainer has opened an issue and assigned it to the author. Do not open issues or pull requests against `medusajs/medusa` from this project.
+- If something here is genuinely worth upstreaming, write it up in Discussions first and keep the implementation local (a module, a provider, a script in this repo) until a maintainer picks it up. PRs without a linked, assigned issue are closed automatically by `pr-guardrails` within hours, and `CONTRIBUTING.md` rejects AI-authored PR descriptions and reviewer replies.
+- Keep any scratch fork or clone outside the project tree and delete it once the attempt is dropped; nothing about the attempt should outlive it in this repo.
+
 ## Off-Limits
 
 - `apps/backend/.medusa/`, `.next/`, `dist/`, `out/`, `.turbo/` — build output, excluded from the workspace and regenerated.
