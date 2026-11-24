@@ -128,6 +128,45 @@ jobs:
                   sys.exit(res.returncode)
           EOF
 
+      - name: Sync deploy script to instance
+        run: |
+          # The instance runs /home/ubuntu/deploy.sh, which was originally placed
+          # there by hand. Overwrite it with the reviewed copy from this repo on
+          # every deploy, so changes under deploy/ actually take effect.
+          SCRIPT="$(base64 < deploy/deploy.sh | tr -d '\n')"
+          EXPECTED_SHA="$(sha256sum deploy/deploy.sh | cut -d' ' -f1)"
+          jq -n --arg cmd "printf '%s' '${SCRIPT}' | base64 -d > /home/ubuntu/deploy.sh && chmod +x /home/ubuntu/deploy.sh && [ \"\$(sha256sum /home/ubuntu/deploy.sh | cut -d' ' -f1)\" = '${EXPECTED_SHA}' ]" \
+            '{commands: [$cmd]}' > /tmp/ssm-sync-parameters.json
+
+          SYNC_ID=$(aws ssm send-command \
+            --instance-ids "$EC2_INSTANCE_ID" \
+            --document-name "AWS-RunShellScript" \
+            --parameters file:///tmp/ssm-sync-parameters.json \
+            --query "Command.CommandId" \
+            --output text)
+
+          STATUS="Pending"
+          for i in $(seq 1 20); do
+            STATUS=$(aws ssm get-command-invocation \
+              --command-id "$SYNC_ID" \
+              --instance-id "$EC2_INSTANCE_ID" \
+              --query "Status" \
+              --output text)
+            case "$STATUS" in
+              Success) echo "deploy script synced"; exit 0 ;;
+              Failed|TimedOut|Cancelled) break ;;
+            esac
+            sleep 3
+          done
+
+          aws ssm get-command-invocation \
+            --command-id "$SYNC_ID" \
+            --instance-id "$EC2_INSTANCE_ID" \
+            --query "StandardErrorContent" \
+            --output text
+          echo "could not sync deploy/deploy.sh to the instance (status: $STATUS)"
+          exit 1
+
       - name: Deploy via SSM Run Command
         env:
           IMAGE_TAG: ${{ github.sha }}
