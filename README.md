@@ -96,9 +96,11 @@ Pushing to `main` auto-deploys the storefront to Vercel (root directory `apps/st
 ### Database (Neon)
 
 The production `DATABASE_URL` points to Neon PostgreSQL. After the image is pushed
-to ECR, the EC2 deployment script runs `medusa db:migrate` inside the new image
-before replacing the running container. A failed migration stops the rollout and
-leaves the previous container running.
+to ECR, the EC2 deployment script runs `medusa db:migrate --execute-all-links`
+inside the new image before replacing the running container. A failed migration
+stops the rollout and leaves the previous container running. The flag is there
+because the deploy has no TTY: `db:migrate` also syncs link modules, and Medusa
+asks interactively before applying any link change that alters or drops a column.
 
 ```bash
 npm exec medusa db:migrate
@@ -225,8 +227,9 @@ npm run backend:seed
 ### 数据库 (Neon)
 
 生产环境的 `DATABASE_URL` 指向 Neon PostgreSQL。镜像推送到 ECR 后，EC2 上的
-部署脚本会在替换线上容器前，使用新镜像执行 `medusa db:migrate`。迁移失败会
-中止发布并保留旧容器。
+部署脚本会在替换线上容器前，使用新镜像执行 `medusa db:migrate --execute-all-links`。
+迁移失败会中止发布并保留旧容器。加这个 flag 是因为部署环境没有 TTY：`db:migrate`
+还会同步 link 模块，而 Medusa 在应用任何「改列/删列」的 link 变更前会交互式询问。
 
 ### 通知 (Resend)
 

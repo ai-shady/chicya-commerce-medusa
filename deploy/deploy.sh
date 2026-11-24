@@ -34,11 +34,20 @@ docker compose -f "${COMPOSE_FILE}" pull medusa
 
 # Apply pending database migrations from the newly pulled image before swapping
 # containers, so a failed migration leaves the currently running server up.
+#
+# `--execute-all-links` is required because this runs without a TTY. `db:migrate`
+# also syncs link modules, and Medusa treats any link change whose SQL contains
+# "alter column" or "drop column" as unsafe: it stops and asks which tables to
+# apply interactively. In SSM Run Command nobody answers, so the step hangs until
+# the workflow times out (2026-11-24, 2.23.0 widened
+# product_variant_inventory_item.required_quantity from integer to numeric).
+# Passing the flag applies those changes unattended, which also means a future
+# destructive link change would apply without review — watch this log.
 echo "=== running db:migrate ==="
 docker run --rm \
   --env-file /home/ubuntu/medusa-prod.env \
   "${IMAGE}" \
-  node /app/node_modules/.bin/medusa db:migrate
+  node /app/node_modules/.bin/medusa db:migrate --execute-all-links
 
 # A `medusa` container created outside this compose project (no or mismatched
 # com.docker.compose.project label) blocks `compose up` with a container-name
