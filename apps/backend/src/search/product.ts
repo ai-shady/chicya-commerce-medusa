@@ -6,9 +6,14 @@ import {
   search,
 } from "@medusajs/framework/utils"
 
-import { ProductOptionRow, toOptionValues } from "./helpers/option-values"
-import { loadPricing, priceFields, toProductPricing } from "./helpers/pricing"
-import { resolveProductIds } from "./helpers/resolve-product-ids"
+// Explicit `.ts` extensions: the search index loader `require()`s this file
+// straight from source, and Node's type stripping resolves relative imports
+// only when they carry an extension. `rewriteRelativeImportExtensions` in
+// tsconfig turns them back into `.js` in the build output.
+import { toOptionValues } from "./helpers/option-values.ts"
+import type { ProductOptionRow } from "./helpers/option-values.ts"
+import { loadPricing, priceFields, toProductPricing } from "./helpers/pricing.ts"
+import { resolveProductIds } from "./helpers/resolve-product-ids.ts"
 
 const PRODUCT_GRAPH_FIELDS = [
   "id",

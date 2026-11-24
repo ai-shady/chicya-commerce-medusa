@@ -4,6 +4,7 @@
     "esModuleInterop": true,
     "module": "Node16",
     "moduleResolution": "Node16",
+    "rewriteRelativeImportExtensions": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
