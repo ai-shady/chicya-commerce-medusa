@@ -153,6 +153,7 @@ claude mcp add --transport http medusa https://docs.medusajs.com/mcp # or agent 
 - Upstream storefront diffs are intent, not patches: our storefront uses `[locale]` routing, its own UI kit and i18n. Re-implement the fix; don't copy files over ours.
 - Keep every `@medusajs/*` package at the same version in `apps/backend` and `apps/storefront`. Mixed versions make npm hoist two copies of `@medusajs/types` and break backend typecheck with "logger is missing in type SearchContainer"-style errors.
 - Ignore upstream's `pnpm-workspace.yaml` / pnpm lockfile changes; this repo is npm workspaces.
+- `fork` is `ai-shady/medusa-upstream-pr`, a fork of `medusajs/medusa` kept only for upstream PR branches. Push feature branches there and open PRs from it; never use it for project code. It is not `ai-shady/medusa`, which is the owner's personal Medusa fork and must not be rewritten or deleted.
 
 ## Upstream contributions
 
